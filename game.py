@@ -22,6 +22,7 @@ class SnakeGame:
         self.snakemap = []
         self.direc = [0, 1]
         self.create_map()
+        self.pause = False
         
     def start(self, ic):
         self.stdscr = ic
@@ -83,6 +84,9 @@ class SnakeGame:
                 self.direc =  [0, 1]
             elif key == curses.KEY_LEFT or key == ord("a"):
                 self.direc =  [0, -1]
+            elif key == ord(" "):
+                self.pause = True
+
 
 
 
@@ -96,9 +100,21 @@ class SnakeGame:
 
             
         while True:
+            
+            while self.pause:
+                stdscr.nodelay(0)
+                while True:
+                    pause = stdscr.getch()
+
+                    if pause == ord(" "):
+                        self.pause = False
+                        stdscr.nodelay(1)
+                        time.sleep(0.5)
+                        break
+                                    
             self.direction()
             direc = self.direc
-
+                        
             pxy = (direc[0] + pxy[0], direc[1] + pxy[1])
             stdscr.addch(pxy[0], pxy[1], ord("O"), curses.color_pair(2))
             snake.append(pxy)
